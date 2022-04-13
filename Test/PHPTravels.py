@@ -19,6 +19,9 @@ class TestExampleOne(unittest.TestCase):
         self.navigate_to_webpage()
         self.enter_login_details()
 
+    def test_simple_navigate(self):
+        self.navigate_to_webpage()
+
     def navigate_to_webpage(self):
         driver.navigate_to(base_url)
 
@@ -26,7 +29,7 @@ class TestExampleOne(unittest.TestCase):
         driver.enter_text(SamplePageObjects.login_username_textfield(), "GarthD@gmail.com")
         driver.enter_text(SamplePageObjects.login_password_textfield(), "NotMyPassword")
         driver.click_element(SamplePageObjects.login_button())
-        driver.wait_element(SamplePageObjects.login_incorrect_user_details_error_message())
+        driver.is_element_visible(SamplePageObjects.login_incorrect_user_details_error_message())
 
     def tearDown(self):
         driver.shut_down()

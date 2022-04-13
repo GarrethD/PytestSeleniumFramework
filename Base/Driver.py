@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class UnreachableBrowserException:
@@ -55,47 +56,32 @@ class Driver:
         except SessionNotCreatedException as ex:
             print("Failed to navigate to url.", ex.msg)
 
-    def is_element_visible(self, xpath):
+    def wait_for_element_visible(self, xpath):
         is_visible = False
         timer = 0
         element: WebElement
         try:
-            while timer <= self.global_timeout:
-                sleep(1000)
-                is_visible = driver.find_elements(By.XPATH, xpath).size() > 0
-                if is_visible:
-                    element = driver.find_element(By.XPATH, xpath)
-                    if element.is_displayed() and element.is_enabled():
-                        break
-                    else:
-                        timer += 1
+            WebDriverWait(driver, self.global_timeout).until(driver.find_element(By.XPATH, xpath).is_displayed()
+                                                             and driver.find_element(By.XPATH, xpath).is_enabled())
 
         except TypeError as ex:
             print("Element not visible.", ex.msg)
-        finally:
-            return is_visible
-
-    def wait_for_element_visible(self, xpath):
-        if not self.is_element_visible(xpath):
-            print("Failed to wait for element to be visible.")
 
     def click_element(self, xpath):
         try:
             self.wait_for_element_visible(xpath)
+            driver.find_element(By.XPATH, xpath).click()
         except ElementNotVisibleException as ex:
             print("Element not visible.", ex.msg)
         except ElementClickInterceptedException as ex:
             print("Element not intractable.", ex.msg)
-        finally:
-            driver.find_element(By.XPATH, xpath).click()
 
     def enter_text(self, xpath, text_to_enter):
         try:
             self.wait_for_element_visible(xpath)
+            driver.find_element(By.XPATH, xpath).send_keys(text_to_enter)
         except ElementClickInterceptedException as ex:
             print("Element not intractable.", ex.msg)
-        finally:
-            driver.find_element(By.XPATH, xpath).send_keys(text_to_enter)
 
     def shut_down(self):
         driver.quit()
