@@ -57,15 +57,11 @@ class Driver:
             print("Failed to navigate to url.", ex.msg)
 
     def wait_for_element_visible(self, xpath):
-        is_visible = False
-        timer = 0
-        element: WebElement
         try:
             WebDriverWait(driver, self.global_timeout).until(driver.find_element(By.XPATH, xpath).is_displayed()
                                                              and driver.find_element(By.XPATH, xpath).is_enabled())
-
         except TypeError as ex:
-            print("Element not visible.", ex.msg)
+            print("Element not visible.", ex)
 
     def click_element(self, xpath):
         try:
