@@ -1,4 +1,4 @@
-from time import sleep
+from asyncio import sleep
 
 import webdriver_manager.chrome
 from selenium import webdriver
@@ -57,19 +57,20 @@ class Driver:
 
     def is_element_visible(self, xpath):
         is_visible = False
-        timer = 30
+        timer = 0
         element: WebElement
         try:
             while timer <= self.global_timeout:
                 sleep(1000)
-                is_visible = driver.find_elements(By.XPATH, xpath).size() < 1
+                is_visible = driver.find_elements(By.XPATH, xpath).size() > 0
                 if is_visible:
                     element = driver.find_element(By.XPATH, xpath)
                     if element.is_displayed() and element.is_enabled():
                         break
                     else:
                         timer += 1
-        except ElementNotVisibleException as ex:
+
+        except TypeError as ex:
             print("Element not visible.", ex.msg)
         finally:
             return is_visible
