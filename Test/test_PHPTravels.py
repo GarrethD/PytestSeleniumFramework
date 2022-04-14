@@ -19,8 +19,8 @@ class PHPTravels(unittest.TestCase):
         self.navigate_to_webpage()
         self.enter_login_details()
 
-    def test_simple_navigate(self):
-        self.navigate_to_webpage()
+    # def test_simple_navigate(self):
+    #     self.navigate_to_webpage()
 
     def navigate_to_webpage(self):
         driver.navigate_to(base_url)
