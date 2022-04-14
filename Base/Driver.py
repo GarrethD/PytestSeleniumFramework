@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class UnreachableBrowserException:
@@ -57,14 +58,10 @@ class Driver:
             print("Failed to navigate to url.", ex.msg)
 
     def wait_for_element_visible(self, xpath):
-        is_visible = False
-        timer = 0
         element: WebElement
         try:
-            WebDriverWait(driver, self.global_timeout).until(driver.find_element(By.XPATH, xpath).is_displayed()
-                                                             and driver.find_element(By.XPATH, xpath).is_enabled())
-
-        except TypeError as ex:
+            WebDriverWait(driver, self.global_timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
+        except ElementNotVisibleException as ex:
             print("Element not visible.", ex.msg)
 
     def click_element(self, xpath):
