@@ -36,38 +36,36 @@ class Driver:
             print("Failed to open browser.", ex)
 
     def initialize_chrome_driver(self):
-        global driver
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("useAutomationExtension", False)
         service = ChromeService(executable_path=webdriver_manager.chrome.ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=options)
+        self.driver = webdriver.Chrome(service=service, options=options)
 
     def initialize_gecko_driver(self):
-        global driver
         profile = webdriver.FirefoxOptions()
         profile.set_preference("dom.webnotifications.serviceworker.enabled", False)
         profile.set_preference("dom.webnotifications.enabled", False)
         service = FirefoxService(executable_path=webdriver_manager.chrome.ChromeDriverManager().install())
-        driver = webdriver.Firefox(service=service, options=profile)
+        self.driver = webdriver.Firefox(service=service, options=profile)
 
     def navigate_to(self, url):
         try:
-            driver.get(url)
+            self.driver.get(url)
         except SessionNotCreatedException as ex:
             print("Failed to navigate to url.", ex.msg)
 
     def wait_for_element_visible(self, xpath):
         element: WebElement
         try:
-            WebDriverWait(driver, self.global_timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            WebDriverWait(self.driver, self.global_timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
         except ElementNotVisibleException as ex:
             print("Element not visible.", ex.msg)
 
     def click_element(self, xpath):
         try:
             self.wait_for_element_visible(xpath)
-            driver.find_element(By.XPATH, xpath).click()
+            self.driver.find_element(By.XPATH, xpath).click()
         except ElementNotVisibleException as ex:
             print("Element not visible.", ex.msg)
         except ElementClickInterceptedException as ex:
@@ -76,9 +74,9 @@ class Driver:
     def enter_text(self, xpath, text_to_enter):
         try:
             self.wait_for_element_visible(xpath)
-            driver.find_element(By.XPATH, xpath).send_keys(text_to_enter)
+            self.driver.find_element(By.XPATH, xpath).send_keys(text_to_enter)
         except ElementClickInterceptedException as ex:
             print("Element not intractable.", ex.msg)
 
     def shut_down(self):
-        driver.quit()
+        self.driver.quit()
