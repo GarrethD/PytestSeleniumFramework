@@ -78,5 +78,8 @@ class Driver:
         except ElementClickInterceptedException as ex:
             print("Element not intractable.", ex.msg)
 
+    # def take_screenshot(self, screenshot_name):
+    #     self.driver.save_screenshot(screenshot_name)
+
     def shut_down(self):
         self.driver.quit()

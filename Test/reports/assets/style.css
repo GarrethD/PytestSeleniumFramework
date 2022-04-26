@@ -197,7 +197,6 @@ from selenium import webdriver
 from Base.Driver import Driver
 from PageObjects import SamplePageObjects
 
-driver: webdriver
 
 class PHPTravels(unittest.TestCase):
     base_url = None
@@ -207,7 +206,6 @@ class PHPTravels(unittest.TestCase):
         driver = Driver("CHROME")
         self.base_url = "https://www.phptravels.net/login"
 
-    @pytest.mark.description("This test tests for incorrect login")
     def test_php_travel_incorrect_login(self):
         self.navigate_to_webpage()
         self.enter_login_details()
